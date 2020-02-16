@@ -5,20 +5,41 @@ import ShopPage from "./pages/shop/Shop.page";
 import Header from "./components/header/Header.component";
 import AuthPage from "./pages/authpage/Auth.page";
 import { Route, Switch } from "react-router-dom";
-
-const HatsPage = props => (
-  <div>Hats Page</div>
-);
+import { auth } from "./firebase/firebase.utils";
 
 class App extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      currentUser: null
+    }
+  }
+
+  unsubscribeFromAuth = null;
+
+  componentDidMount() {
+    this.unsubscribeFromAuth = auth.onAuthStateChanged(user => {
+      this.setState({
+        currentUser: user
+      });
+
+      console.log(user);
+    });
+  }
+
+  componentWillUnmount() {
+    this.unsubscribeFromAuth();
+  }
+
   render() {
     return (
       <div className='App'>
-        <Header />
+        <Header currentUser={this.state.currentUser} />
         <Switch>
-          <Route exact={true} path="/" component={HomePage} />
-          <Route exact={false} path="/shop" component={ShopPage} />
-          <Route exact={false} path="/signin" component={AuthPage} />
+          <Route exact path="/" component={HomePage} />
+          <Route path="/shop" component={ShopPage} />
+          <Route path="/signin" component={AuthPage} />
         </Switch>
       </div>
     );
