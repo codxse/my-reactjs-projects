@@ -1,5 +1,6 @@
 import React from "react";
 import "./FormInput.styles.scss";
+import "../custom-button/CustomButton.component";
 
 const FormInput = ({ handleChange, label, ...otherProps }) => (
   <div className="group">
