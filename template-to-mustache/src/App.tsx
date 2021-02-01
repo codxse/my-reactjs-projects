@@ -3,9 +3,10 @@ import logo from './logo.svg';
 // import './App.css';
 import { Template } from "./Template";
 import prettify  from "html-prettify"
+import { MOCK } from "./mock";
 
 function App() {
-  const [content, setContent] = useState<string>("")
+  const [content, setContent] = useState<string>(MOCK)
   const [mustache, setMustache] = useState<string>("")
   const [state, setState] = useState<"mustache" | "preview">("mustache")
   const isPreview = state === "preview"

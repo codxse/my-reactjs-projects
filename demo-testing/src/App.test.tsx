@@ -42,18 +42,20 @@ test("Display counter", () => {
   expect(component.length).toBe(1)
 })
 
-test("Counter starts at 0", () => {
-  const wrapper = setup()
-  const component = findByTestAttr(wrapper, "count")
-  expect(component.text()).toBe("0")
-})
+describe("Increament", () => {
+  test("Counter starts at 0", () => {
+    const wrapper = setup()
+    const component = findByTestAttr(wrapper, "count")
+    expect(component.text()).toBe("0")
+  })
 
-test ("Click counter inc the value", () => {
-  const wrapper = setup()
-  const button = findByTestAttr(wrapper, "increment-button")
-  button.simulate("click")
-  const count = findByTestAttr(wrapper, "count").text()
-  expect(count).toBe("1")
+  test ("Click counter inc the value", () => {
+    const wrapper = setup()
+    const button = findByTestAttr(wrapper, "increment-button")
+    button.simulate("click")
+    const count = findByTestAttr(wrapper, "count").text()
+    expect(count).toBe("1")
+  })
 })
 
 
