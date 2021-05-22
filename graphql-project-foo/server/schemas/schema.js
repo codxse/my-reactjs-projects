@@ -44,13 +44,15 @@ const UserType = new GraphQLObjectType({
     posts: {
       type: new GraphQLList(PostType),
       resolve(parent, args) {
-        return _.filter(POST_DATA, {userId: parent.id})
+        // return _.filter(POST_DATA, {userId: parent.id})
+        return Post.find({userId: parent.id}).exec()
       }
     },
     hobbies: {
       type: new GraphQLList(HobbyType),
       resolve(parent, args) {
-        return _.filter(HOBBY_DATA, {userId: parent.id})
+        // return _.filter(HOBBY_DATA, {userId: parent.id})
+        return Hobby.find({userId: parent.id}).exec()
       }
     }
   })
@@ -66,7 +68,8 @@ const HobbyType = new GraphQLObjectType({
     user: {
       type: UserType,
       resolve(parent, args) {
-        return _.find(USER_DATA, {id: parent.userId})
+        // return _.find(USER_DATA, {id: parent.userId})
+        return User.findById(parent.userId)
       }
     }
   })
@@ -81,7 +84,8 @@ const PostType = new GraphQLObjectType({
     user: {
       type: UserType,
       resolve(parent, args) {
-        return _.find(USER_DATA, {id: parent.userId})
+        // return _.find(USER_DATA, {id: parent.userId})
+        return User.findById(parent.userId)
       }
     }
   })
@@ -95,39 +99,45 @@ const RootQuery = new GraphQLObjectType({
       type: UserType,
       args: {id: {type: GraphQLID}},
       resolve(parent, args) {
-        return _.find(USER_DATA, {id: args.id})
+        // return _.find(USER_DATA, {id: args.id})
+        return User.findById(args.id)
       }
     },
     users: {
       type: new GraphQLList(UserType),
       resolve(parent, args) {
-        return USER_DATA
+        // return USER_DATA
+        return User.find({})
       }
     },
     hobby: {
       type: HobbyType,
       args: {id: {type: GraphQLID}},
       resolve(parent, args) {
-        return _.find(HOBBY_DATA, {id: args.id})
+        // return _.find(HOBBY_DATA, {id: args.id})
+        return Hobby.findById(args.id)
       }
     },
     hobbies: {
       type: new GraphQLList(HobbyType),
       resolve(parent, args) {
-        return HOBBY_DATA
+        // return HOBBY_DATA
+        return Hobby.find({})
       }
     },
     post: {
       type: PostType,
       args: {id: {type: GraphQLID}},
       resolve(parent , args) {
-        return _.find(POST_DATA, {id: args.id})
+        // return _.find(POST_DATA, {id: args.id})
+        return Post.findById(args.id)
       }
     },
     posts: {
       type: new GraphQLList(PostType),
       resolve(parent, args) {
-        return POST_DATA
+        // return POST_DATA
+        return Post.find({})
       }
     }
   }
@@ -139,49 +149,49 @@ const Mutation = new GraphQLObjectType({
     CreateUser: {
       type: UserType,
       args: {
-        id: {type: GraphQLID},
         name: {type: GraphQLString},
         age: {type: GraphQLInt},
         profession: {type: GraphQLString},
       },
       resolve(parent, args) {
-        let user = {
+        let user = new User({
           name: args.name,
           age: args.age,
           profession: args.profession,
-        }
+        })
+        user.save()
         return user
       }
     },
     CreatePost: {
       type: PostType,
       args: {
-        id: {type: GraphQLID},
         userId: {type: GraphQLID},
         comment: {type: GraphQLString},
       },
       resolve(parent, args) {
-        let post = {
+        let post = new Post({
           userId: args.userId,
           comment: args.comment,
-        }
+        })
+        post.save()
         return post
       }
     },
     CreateHobby: {
       type: HobbyType,
       args: {
-        id: {type: GraphQLID},
         userId: {type: GraphQLID},
         title: {type: GraphQLString},
         description: {type: GraphQLString},
       },
       resolve(parent, args) {
-        let hobby = {
+        let hobby = new Hobby({
           userId: args.userId,
           title: args.title,
           description: args.description,
-        }
+        })
+        hobby.save()
         return hobby
       }
     }
