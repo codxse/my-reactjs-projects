@@ -1,7 +1,14 @@
 const express = require('express')
 const {graphqlHTTP} = require('express-graphql')
+const mongoose = require('mongoose')
 
-const schema = require('./schema/schema')
+mongoose.connect(`mongodb://localhost:27017/sandboxDB`, {
+  useNewUrlParser: true
+})
+mongoose.connection.once('open', () => {
+  console.log('MongoDB connected!')
+})
+const schema = require('./schemas/schema')
 const app = express()
 
 app.use('/graphql', graphqlHTTP({
