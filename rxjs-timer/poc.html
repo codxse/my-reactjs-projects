@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<!--
+Created using JS Bin
+http://jsbin.com
+Copyright (c) 2020 by anonymous (http://jsbin.com/xabutoqiso/16/edit)
+Released under the MIT license: http://jsbin.mit-license.org
+-->
+<meta name="robots" content="noindex">
+<html>
+  <head>
+    <title>Hello!</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/rxjs/7.2.0/rxjs.umd.js"></script>
+  </head>
+  <body>
+    <h1>Holla</h1>
+    <canvas id="myCanvas" width="1000" height="800"
+style="border:1px solid #c3c3c3;">
+Your browser does not support the canvas element.
+</canvas>
+<script id="jsbin-javascript">
+    console.log(rxjs)
+    const fromEvent = rxjs.fromEvent
+    const move$ = fromEvent(window, 'mousemove');
+    const down$ = fromEvent(window, 'mousedown');
+    const up$ = fromEvent(window, 'mouseup');
+    const keydown$ = fromEvent(window, 'keydown');
+    const keypress$ = fromEvent(window, 'keypress');
+    const keyup$ = fromEvent(window, 'keyup');
+
+    const activity$ = rxjs.merge(
+        move$.pipe(rxjs.mapTo('Mouse Move!')),
+        down$.pipe(rxjs.mapTo('Mose Down!')),
+        up$.pipe(rxjs.mapTo('Mouse Up!')),
+        keydown$.pipe(rxjs.mapTo('Key Down!')),
+        keypress$.pipe(rxjs.mapTo('Key Press!')),
+        keyup$.pipe(rxjs.mapTo('Key Up!'))
+    )
+
+    const MAX_IDLE_TIME = 10
+    const maxIdleTime$ = rxjs.timer(MAX_IDLE_TIME * 1000)
+
+    const newTimer = () => rxjs.interval(1000).pipe(
+        rxjs.takeUntil(maxIdleTime$)
+    )
+
+    const events$ = activity$.pipe(
+        rxjs.startWith("START!"),
+        rxjs.throttleTime(250)
+    )
+    const idle$ = events$.pipe(
+        rxjs.switchMapTo(newTimer())
+    )
+
+    const subscribe = idle$.subscribe(val => {
+        const sec = val + 1
+        console.log(sec)
+        if (sec === MAX_IDLE_TIME-1) {
+            console.log("LOGOUT!")
+        }
+    })
+</script>
+</body>
+</html>
