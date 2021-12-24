@@ -20,7 +20,7 @@ const activity$ = merge(
 )
 
 const MAX_IDLE_TIME = 10
-const THROTTLE_MS = 250
+const THROTTLE_MS = 0
 const maxIdleTime$ = timer(MAX_IDLE_TIME * 1000)
 
 const newTimer = () => interval(1000).pipe(
